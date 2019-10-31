@@ -12,3 +12,6 @@ A pipeline for sgRNA design
 `xname` is the accession name (e.g. batch1).
 
 The output file named "xname_selected.txt" contains the sgRNA information.
+
+## Citation
+Zhou, Y. *et al.* [Painting a specific chromosome with CRISPR/Cas9 for live-cell imaging](https://www.ncbi.nlm.nih.gov/pubmed/28084328). *Cell Res*, doi:10.1038/cr.2017.9 (2017).
