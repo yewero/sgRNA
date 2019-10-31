@@ -1,0 +1,21 @@
+#!/bin/bash
+
+function do_step2 {
+local gene=$1
+echo $gene
+
+cat ${gene}_?.st4 | sort -u | cut -d ' ' -f 1 | uniq -c > ${gene}.res
+awk '$1==1 {print $2}' ${gene}.res > ${gene}.ok		# sequence specific chromosome :A for chr2 but C for chr6 and chrX 
+
+awk '$1!=1 {print $2}' ${gene}_?.cand1 | sort -u > ${gene}.dup	# more chrs
+
+sort -n ${gene}.ok ${gene}.dup | uniq -d > ${gene}.exc
+sort -n ${gene}.ok ${gene}.exc | uniq -u > ${gene}.god 	# sequence specific chromosome: NGG for chrX
+
+Rscript do_final.r "$gene"
+
+}
+
+do_step2 $1
+
+

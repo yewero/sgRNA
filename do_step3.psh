@@ -1,0 +1,31 @@
+#!/bin/bash
+
+name=$1
+
+rm -f ${name}.subsam
+
+function do_str1 {
+export LANG=C
+cut -f 1 ${name}.final | while read line
+do
+	grep -i -w "^$line" cand_sam/${name}_?_Nmm.sam | cut -d ':' -f 2 >> ${name}.subsam
+done
+}
+
+function do_str2 {
+for i in A C G T
+do
+	myjoin -F 1 -f 1 -m ${name}.final cand_sam/${name}_${i}_Nmm.sam | cut -f 6- >> ${name}.subsam
+done
+}
+
+do_str2
+
+awk '{print $1,$2,$3,$4,$4+length($5)-3-1}' OFS="\t" ${name}.subsam > ${name}.region	# remove NGG
+
+# GC
+sed 's/AGG$//' cand_fa/${name}_A.fa > ${name}.seq
+/home/gaog_pkuhpc/users/tianf/Tools/EMBOSS-6.6.0/emboss/infoseq -nohead -only -name -pgc ${name}.seq > ${name}.gc
+
+Rscript do_moving.r $name
+
